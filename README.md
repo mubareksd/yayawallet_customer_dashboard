@@ -6,6 +6,18 @@
 
 ## Setup
 
+- Clone the project
+
+```shell
+git clone -b flask_py https://github.com/mubareksd/yayawallet_customer_dashboard
+```
+
+- Cd into the project
+
+```shell
+cd yayawallet_customer_dashboard
+```
+
 - Create .env file and insert the required fields
 
 ```shell
