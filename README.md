@@ -35,3 +35,7 @@ or
 ```shell
 python3 app.py
 ```
+
+## Open
+
+- [Live](http://localhost:5000)

@@ -1,76 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.4.1/css/rowReorder.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css" />
-    <style>
-        #loading {
-            text-align: center;
-        }
-        #loading img {
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Dashboard</h1>
-    <div id="table-container">
-        <table id="transactions-table" class="display">
-            <thead>
-                <tr>
-                    <th>Transaction ID</th>
-                    <th>Sender</th>
-                    <th>Receiver</th>
-                    <th>Amount</th>
-                    <th>Currency</th>
-                    <th>Cause</th>
-                    <th>Created At</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr id="loading">
-                    <td colspan="7">
-                        <img src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="Loading...">
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+{% extends "base.html" %}
 
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/rowreorder/1.4.1/js/dataTables.rowReorder.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $.ajax({
-                url: '/api/en/transaction/find-by-user',
-                success: function (response) {
-                    $('#loading').remove(); // Remove loading indicator row
-                    $('#transactions-table').DataTable({
-                        responsive: true,
-                        data: response.data,
-                        columns: [
-                            { data: 'id' },
-                            { data: 'sender.name' },
-                            { data: 'receiver.name' },
-                            { data: 'amount' },
-                            { data: 'currency' },
-                            { data: 'cause' },
-                            { data: 'created_at_time' }
-                        ]
-                    });
-                },
-                error: function () {
-                    $('#loading').html('<td colspan="7">Failed to load data.</td>');
-                }
-            });
+{% block title %} Dashboard {% endblock %} 
+
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container mt-5"> <!-- Fixed the id attribute -->
+    <h1 class="text-center">Transactions</h1>
+    <table id="transactions-table" class="table table-striped nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Sender</th>
+                <th>Receiver</th>
+                <th>Amount</th>
+                <th>Currency</th>
+                <th>Cause</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.id }}</td>
+                    <td>{{ transaction.sender.name }}</td>
+                    <td>{{ transaction.receiver.name }}</td>
+                    <td>
+                        {% if transaction.sender.account == 'antenehgebey' %}
+        <i class="fa-solid fa-minus text-danger"></i>
+    {% else %}
+        <i class="fa-solid fa-plus text-success"></i>
+    {% endif %}
+                        {{ transaction.amount }}
+    
+</td>
+
+                    <td>{{ transaction.currency }}</td>
+                    <td>{{ transaction.cause }}</td>
+                    <td>{{ transaction.created_at_time }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Added jQuery -->
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#transactions-table").DataTable({
+            responsive: true
         });
-    </script>
-</body>
-</html>
+    });
+</script>
+{% endblock scripts %}
