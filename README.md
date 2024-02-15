@@ -21,6 +21,12 @@ python3 -m venv env
 - Activate the virtual environment
 
 ```shell
+source env/bin/activate
+```
+
+- Install dependancies
+
+```shell
 pip install -r requirements.txt
 ```
 
